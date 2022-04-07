@@ -35,6 +35,8 @@ while True:
                   "/getlevel - returns current level\n"
                   "/setlevel - {arg} sets level to {arg}\n"
                   "/break - stops the game\n"
+                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt; arg1: true / false\n"
+                  "/allow - returns current permissions settings\n"
                   "/stats - returns your stats by this session\n"
                   "--------------------")
 
@@ -66,8 +68,8 @@ while True:
                           f"ALLOW_EQUATION = {core.ALLOW_EQUATION}\n"
                           f"ALLOW_SQRT = {core.ALLOW_SQRT}\n"
                           "----------------")
-
-                print("[cmd]: incorrect arguments format")
+                else:
+                    print("[cmd]: incorrect arguments format")
 
             else:
 

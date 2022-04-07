@@ -17,8 +17,15 @@ def clamp(n, a, b):
     return max(a, min(b, n))
 
 
-def generate_operator():
-    return "+-*/^"[random.randint(0, 4)]
+def generate_operator(include_div = True, include_degree = True):
+    s = ['+', '-', '*']
+
+    if include_div:
+        s.append('/')
+    if include_degree:
+        s.append('**')
+
+    return s[random.randint(0, len(s)-1)]
 
 
 def generate_basics(level):
@@ -59,7 +66,7 @@ def generate_basics(level):
 
         return [a // b, {'a': a, 'b': b, 'o': operator}]
 
-    if operator == '^':
+    if operator == '**':
         a = random.randint(2, 20)
 
         n = 2
@@ -74,6 +81,28 @@ def generate_basics(level):
             n = random.randint(2, 4)
 
         return [a ** n, {'a': a, 'b': n, 'o': operator}]
+
+
+def generate_expression(level):
+    num_of_clasters = random.randint(1, 3)
+
+    s = ""
+
+    for i in range(num_of_clasters):
+        g = generate_basics(level)
+
+        s += f"({g[1]['a']} {g[1]['o']} {g[1]['b']})"
+        if i < num_of_clasters - 1:
+            s += " " + generate_operator(False, False) + " "
+
+    answer = int(eval(s))
+    # answer = 0
+
+    s += " = "
+
+    print(s, end="")
+
+    return answer
 
 
 def generate_equation(level):
@@ -100,7 +129,8 @@ def generate_sqrt(level):
 
 
 def generate_mode():
-    mode = random.randint(0, 2)
+    # mode = random.randint(0, 3)
+    mode = 3
 
     # modes = [generate_simple, generate_equation, generate_sqrt]
 
@@ -131,5 +161,5 @@ def generate(level):
     if mode == -1:
         return "[math core]: incorrect format"
 
-    return [generate_simple, generate_equation, generate_sqrt][mode](level)
+    return [generate_simple, generate_equation, generate_sqrt, generate_expression][mode](level)
     # return generate_simple(level)
