@@ -35,7 +35,7 @@ while True:
                   "/getlevel - returns current level\n"
                   "/setlevel - {arg} sets level to {arg}\n"
                   "/break - stops the game\n"
-                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt; arg1: true / false\n"
+                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt / expression / view; arg1: true / false\n"
                   "/allow - returns current permissions settings\n"
                   "/stats - returns your stats by this session\n"
                   "--------------------")
@@ -67,6 +67,8 @@ while True:
                           f"ALLOW_BASIC = {core.ALLOW_BASIC}\n"
                           f"ALLOW_EQUATION = {core.ALLOW_EQUATION}\n"
                           f"ALLOW_SQRT = {core.ALLOW_SQRT}\n"
+                          f"ALLOW_EXPRESSION = {core.ALLOW_EXPRESSION}\n"
+                          f"ALLOW_VIEW = {core.ALLOW_VIEW}\n"
                           "----------------")
                 else:
                     print("[cmd]: incorrect arguments format")
@@ -87,13 +89,19 @@ while True:
                     elif arguments[0] == "sqrt":
                         core.ALLOW_SQRT = value
                         print(f"[cmd]: set ALLOW_SQRT to {value}")
+                    elif arguments[0] == "expression":
+                        core.ALLOW_EXPRESSION = value
+                        print(f"[cmd]: set ALLOW_EXPRESSION to {value}")
+                    elif arguments[0] == "view":
+                        core.ALLOW_VIEW = value
+                        print(f"[cmd]: set ALLOW_VIEW to {value}")
                     else:
                         print("[cmd]: incorrect command format")
 
         if command == "break":
             break
 
-    elif i == str(answer):
+    elif i in answer:
         stats["correct"] += 1
         stats["total"] += 1
         stats["correct/total"] = stats["correct"] / stats["total"]
@@ -101,4 +109,4 @@ while True:
     else:
         stats["total"] += 1
         stats["correct/total"] = stats["correct"] / stats["total"]
-        print("No, correct answer is", answer)
+        print("No, correct answer is", answer[0])

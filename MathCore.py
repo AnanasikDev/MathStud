@@ -4,10 +4,14 @@ import random
 # CONSTANTS
 
 
-ALLOW_NEGATIVE = True
-ALLOW_EQUATION = True
-ALLOW_SQRT = True
-ALLOW_BASIC = True
+ALLOW_NEGATIVE = False
+ALLOW_EQUATION = False
+ALLOW_SQRT = False
+ALLOW_EXPRESSION = False
+ALLOW_VIEW = False
+ALLOW_QUADRATIC_EQUATION = True
+
+ALLOW_BASIC = False
 
 
 # GENERATORS
@@ -102,21 +106,21 @@ def generate_expression(level):
 
     print(s, end="")
 
-    return answer
+    return [answer]
 
 
 def generate_equation(level):
     inp = generate_basics(level)
     print(f"x {inp[1]['o']} {inp[1]['b']} = {inp[0]}")
     print("x = ", end="")
-    return inp[1]['a']
+    return [inp[1]['a']]
 
 
 def generate_simple(level):
     inp = generate_basics(level)
 
     print(f"{inp[1]['a']} {inp[1]['o']} {inp[1]['b']} = ", end="")
-    return inp[0]
+    return [inp[0]]
 
 
 def generate_sqrt(level):
@@ -125,16 +129,72 @@ def generate_sqrt(level):
 
     print(f"sqrt({a**2}) = ", end="")
 
-    return a
+    return [a]
+
+
+def generate_view(level):
+    width = 5 * level
+    height = (5 * level) // 2
+
+    default_simbol = "*"
+    point_simbol = "@"
+
+    a = random.randint(3, 13)
+
+    matrix = [[default_simbol for i in range(width)] for j in range(height)]
+
+    def generate_point():
+        x = random.randint(0, width - 1)
+        y = random.randint(0, height - 1)
+
+        if matrix[y][x] == point_simbol:
+            generate_point()
+        else:
+            matrix[y][x] = point_simbol
+
+    for i in range(a):
+        generate_point()
+
+    for i in matrix:
+        print("".join(i))
+
+    print("Amount of points = ", end="")
+
+    return [a]
+
+
+def generate_quadratic_equation(level):
+    # ax2 + bx + c = 0
+
+    root1 = random.randint(-10, 10)
+    root2 = random.randint(-10, 10)
+
+    if root1 == 0:
+        root1 += 1
+    if root2 == 0 or root2 == root1:
+        root2 += 1
+
+    a = random.randint(1, 10)
+
+    # x1 + x2 = -b/a
+    # x1 * x2 = c/a
+
+    c = root1 * root2 * a
+    b = (root1 + root2) * -a
+
+    print(f"{a}x^2 + {b}x + {c} = 0")
+    # print(a, b, c, root1, root2)
+    print("x1, x2 = ", end="")
+    return [f"{root1} {root2}", f"{root2} {root1}"]
 
 
 def generate_mode():
-    # mode = random.randint(0, 3)
-    mode = 3
+    mode = random.randint(0, 5)
+    # mode = 4
 
     # modes = [generate_simple, generate_equation, generate_sqrt]
 
-    assert ALLOW_BASIC or ALLOW_EQUATION or ALLOW_SQRT
+    assert ALLOW_BASIC or ALLOW_EQUATION or ALLOW_SQRT or ALLOW_EXPRESSION or ALLOW_VIEW or ALLOW_QUADRATIC_EQUATION
 
     # if not ALLOW_BASIC and not ALLOW_EQUATION and not ALLOW_SQRT:
     #     return -1
@@ -151,6 +211,18 @@ def generate_mode():
         if not ALLOW_SQRT:
             return generate_mode()
 
+    elif mode == 3:
+        if not ALLOW_EXPRESSION:
+            return generate_mode()
+
+    elif mode == 4:
+        if not ALLOW_VIEW:
+            return generate_mode()
+
+    elif mode == 5:
+        if not ALLOW_QUADRATIC_EQUATION:
+            return generate_mode()
+
     return mode
 
 
@@ -161,5 +233,5 @@ def generate(level):
     if mode == -1:
         return "[math core]: incorrect format"
 
-    return [generate_simple, generate_equation, generate_sqrt, generate_expression][mode](level)
+    return [generate_simple, generate_equation, generate_sqrt, generate_expression, generate_view, generate_quadratic_equation][mode](level)
     # return generate_simple(level)
