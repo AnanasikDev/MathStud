@@ -166,15 +166,15 @@ def generate_view(level):
 def generate_quadratic_equation(level):
     # ax2 + bx + c = 0
 
-    root1 = random.randint(-10, 10)
-    root2 = random.randint(-10, 10)
+    root1 = random.randint(-13, 13)
+    root2 = random.randint(-13, 13)
 
     if root1 == 0:
         root1 += 1
     if root2 == 0 or root2 == root1:
         root2 += 1
 
-    a = random.randint(1, 10)
+    a = random.randint(1, 12)
 
     # x1 + x2 = -b/a
     # x1 * x2 = c/a
@@ -182,7 +182,16 @@ def generate_quadratic_equation(level):
     c = root1 * root2 * a
     b = (root1 + root2) * -a
 
-    print(f"{a}x^2 + {b}x + {c} = 0")
+    s1 = " + "
+    if b < 0:
+        s1 = " - "
+        b = -b
+    s2 = " + "
+    if c < 0:
+        s2 = " - "
+        c = -c
+
+    print(f"{a}x^2{s1}{b}x{s2}{c} = 0")
     # print(a, b, c, root1, root2)
     print("x1, x2 = ", end="")
     return [f"{root1} {root2}", f"{root2} {root1}"]

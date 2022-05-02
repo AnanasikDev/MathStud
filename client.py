@@ -15,6 +15,7 @@ stats = {
 }
 
 print(f"Super Mega Math Game started! Level = {level}. Use /help to get all commands")
+print("================")
 
 starttime = time()
 
@@ -35,7 +36,7 @@ while True:
                   "/getlevel - returns current level\n"
                   "/setlevel - {arg} sets level to {arg}\n"
                   "/break - stops the game\n"
-                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt / expression / view; arg1: true / false\n"
+                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt / expression / view / quadratic_equation; arg1: true / false\n"
                   "/allow - returns current permissions settings\n"
                   "/stats - returns your stats by this session\n"
                   "--------------------")
@@ -69,6 +70,7 @@ while True:
                           f"ALLOW_SQRT = {core.ALLOW_SQRT}\n"
                           f"ALLOW_EXPRESSION = {core.ALLOW_EXPRESSION}\n"
                           f"ALLOW_VIEW = {core.ALLOW_VIEW}\n"
+                          f"ALLOW_QUADRATIC_EQUATION = {core.ALLOW_QUADRATIC_EQUATION}\n"
                           "----------------")
                 else:
                     print("[cmd]: incorrect arguments format")
@@ -95,6 +97,9 @@ while True:
                     elif arguments[0] == "view":
                         core.ALLOW_VIEW = value
                         print(f"[cmd]: set ALLOW_VIEW to {value}")
+                    elif arguments[0] == "quadratic_equation":
+                        core.ALLOW_QUADRATIC_EQUATION = value
+                        print(f"[cmd]: set ALLOW_QUADRATIC_EQUATION to {value}")
                     else:
                         print("[cmd]: incorrect command format")
 
@@ -106,7 +111,9 @@ while True:
         stats["total"] += 1
         stats["correct/total"] = stats["correct"] / stats["total"]
         print("Yes!")
+        print("================")
     else:
         stats["total"] += 1
         stats["correct/total"] = stats["correct"] / stats["total"]
-        print("No, correct answer is", answer[0])
+        print("No, the correct answer is", answer[0])
+        print("================")
