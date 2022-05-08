@@ -19,6 +19,33 @@ print("================")
 
 starttime = time()
 
+
+def allow(arguments, value):
+    if arguments[0] == "basic":
+        core.Allows["ALLOW_BASIC"] = value
+        print(f"[cmd]: set ALLOW_BASIC to {value}")
+    elif arguments[0] == "equation":
+        core.Allows["ALLOW_EQUATION"] = value
+        print(f"[cmd]: set ALLOW_EQUATION to {value}")
+    elif arguments[0] == "sqrt":
+        core.Allows["ALLOW_SQRT"] = value
+        print(f"[cmd]: set ALLOW_SQRT to {value}")
+    elif arguments[0] == "expression":
+        core.Allows["ALLOW_EXPRESSION"] = value
+        print(f"[cmd]: set ALLOW_EXPRESSION to {value}")
+    elif arguments[0] == "view":
+        core.Allows["ALLOW_VIEW"] = value
+        print(f"[cmd]: set ALLOW_VIEW to {value}")
+    elif arguments[0] == "quadratic_equation":
+        core.Allows["ALLOW_QUADRATIC_EQUATION"] = value
+        print(f"[cmd]: set ALLOW_QUADRATIC_EQUATION to {value}")
+    elif arguments[0] == "measure":
+        core.Allows["ALLOW_MEASURE"] = value
+        print(f"[cmd]: set ALLOW_MEASURE to {value}")
+    else:
+        print("[cmd]: incorrect command format")
+
+
 while True:
 
     answer = core.generate(level)
@@ -36,7 +63,8 @@ while True:
                   "/getlevel - returns current level\n"
                   "/setlevel - {arg} sets level to {arg}\n"
                   "/break - stops the game\n"
-                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt / expression / view / quadratic_equation; arg1: true / false\n"
+                  "/allow {arg0} {arg1} - sets arg0 to arg1. arg0: basic / equation / sqrt / expression / view / quadratic_equation / measure; arg1: true / false\n"
+                  "/allowonly {arg} arg: basic / equation / sqrt / expression / view / quadratic_equation / measure"
                   "/allow - returns current permissions settings\n"
                   "/stats - returns your stats by this session\n"
                   "--------------------")
@@ -65,12 +93,13 @@ while True:
 
                 if len(arguments) == 0:
                     print("----Settings----\n"
-                          f"ALLOW_BASIC = {core.ALLOW_BASIC}\n"
-                          f"ALLOW_EQUATION = {core.ALLOW_EQUATION}\n"
-                          f"ALLOW_SQRT = {core.ALLOW_SQRT}\n"
-                          f"ALLOW_EXPRESSION = {core.ALLOW_EXPRESSION}\n"
-                          f"ALLOW_VIEW = {core.ALLOW_VIEW}\n"
-                          f"ALLOW_QUADRATIC_EQUATION = {core.ALLOW_QUADRATIC_EQUATION}\n"
+                          f"ALLOW_BASIC = {core.Allows['ALLOW_BASIC']}\n"
+                          f"ALLOW_EQUATION = {core.Allows['ALLOW_EQUATION']}\n"
+                          f"ALLOW_SQRT = {core.Allows['ALLOW_SQRT']}\n"
+                          f"ALLOW_EXPRESSION = {core.Allows['ALLOW_EXPRESSION']}\n"
+                          f"ALLOW_VIEW = {core.Allows['ALLOW_VIEW']}\n"
+                          f"ALLOW_QUADRATIC_EQUATION = {core.Allows['ALLOW_QUADRATIC_EQUATION']}\n"
+                          f"ALLOW_MEASURE = {core.Allows['ALLOW_MEASURE']}\n"
                           "----------------")
                 else:
                     print("[cmd]: incorrect arguments format")
@@ -82,26 +111,12 @@ while True:
 
                 else:
                     value = {true : True, false : False}[arguments[1]]
-                    if arguments[0] == "basic":
-                        core.ALLOW_BASIC = value
-                        print(f"[cmd]: set ALLOW_BASIC to {value}")
-                    elif arguments[0] == "equation":
-                        core.ALLOW_EQUATION = value
-                        print(f"[cmd]: set ALLOW_EQUATION to {value}")
-                    elif arguments[0] == "sqrt":
-                        core.ALLOW_SQRT = value
-                        print(f"[cmd]: set ALLOW_SQRT to {value}")
-                    elif arguments[0] == "expression":
-                        core.ALLOW_EXPRESSION = value
-                        print(f"[cmd]: set ALLOW_EXPRESSION to {value}")
-                    elif arguments[0] == "view":
-                        core.ALLOW_VIEW = value
-                        print(f"[cmd]: set ALLOW_VIEW to {value}")
-                    elif arguments[0] == "quadratic_equation":
-                        core.ALLOW_QUADRATIC_EQUATION = value
-                        print(f"[cmd]: set ALLOW_QUADRATIC_EQUATION to {value}")
-                    else:
-                        print("[cmd]: incorrect command format")
+                    allow(arguments, value)
+
+        if command == "allowonly":
+            for i in core.Allows.keys():
+                core.Allows[i] = False
+            allow(arguments, True)
 
         if command == "break":
             break

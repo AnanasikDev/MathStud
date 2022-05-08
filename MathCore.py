@@ -4,15 +4,16 @@ import random
 # CONSTANTS
 
 
-ALLOW_NEGATIVE = False
-ALLOW_EQUATION = False
-ALLOW_SQRT = False
-ALLOW_EXPRESSION = False
-ALLOW_VIEW = False
-ALLOW_QUADRATIC_EQUATION = True
-
-ALLOW_BASIC = False
-
+Allows = {
+      "ALLOW_NEGATIVE" : True,
+      "ALLOW_EQUATION" : True,
+      "ALLOW_SQRT" : True,
+      "ALLOW_EXPRESSION" : True,
+      "ALLOW_VIEW" : True,
+      "ALLOW_QUADRATIC_EQUATION" : True,
+      "ALLOW_MEASURE" : True,
+      "ALLOW_BASIC" : True
+          }
 
 # GENERATORS
 
@@ -47,7 +48,7 @@ def generate_basics(level):
         a = random.randint(3, 100 + 55*(level-1))
         b = random.randint(3, 100 + 55*(level-1))
 
-        if ALLOW_NEGATIVE:
+        if Allows["ALLOW_NEGATIVE"]:
             return [a - b, {'a': a, 'b': b, 'o': operator}]
         else:
             if a > b:
@@ -197,39 +198,75 @@ def generate_quadratic_equation(level):
     return [f"{root1} {root2}", f"{root2} {root1}"]
 
 
+def generate_measures(level):
+    def generate_speed(level):
+        mode = random.randint(0, 1)
+        if mode == 0:
+            # м/с -> км/ч
+            mps = random.randint(1, 10 + level)
+            print(f"м/с {mps} = км/ч ", end="")
+            if 3.6 * mps == int(3.6 * mps):
+                return int(3.6 * mps)
+            else:
+                return 3.6 * mps
+        if mode == 1:
+            # км/ч -> м/с
+            kmph = random.randint(2, 20)
+            kmph *= 3.6
+            print(f"км/ч {kmph} = м/с ", end="")
+            if kmph / 3.6 == int(kmph / 3.6):
+                return int(kmph / 3.6)
+            else:
+                return kmph / 3.6
+
+    return [str(generate_speed(level))]
+
+
 def generate_mode():
-    mode = random.randint(0, 5)
+    amount_of_modes = 6  # Don't forget to change when adding new modes!
+
+    mode = random.randint(0, amount_of_modes)
     # mode = 4
 
     # modes = [generate_simple, generate_equation, generate_sqrt]
 
-    assert ALLOW_BASIC or ALLOW_EQUATION or ALLOW_SQRT or ALLOW_EXPRESSION or ALLOW_VIEW or ALLOW_QUADRATIC_EQUATION
+    assert  Allows["ALLOW_BASIC"] or \
+            Allows["ALLOW_EQUATION"] or \
+            Allows["ALLOW_SQRT"] or \
+            Allows["ALLOW_EXPRESSION"] or \
+            Allows["ALLOW_VIEW"] or \
+            Allows["ALLOW_QUADRATIC_EQUATION"] or \
+            Allows["ALLOW_MEASURE"]
 
     # if not ALLOW_BASIC and not ALLOW_EQUATION and not ALLOW_SQRT:
     #     return -1
 
     if mode == 0:
-        if not ALLOW_BASIC:
+        if not Allows["ALLOW_BASIC"]:
             return generate_mode()
 
     elif mode == 1:
-        if not ALLOW_EQUATION:
+        if not Allows["ALLOW_EQUATION"]:
             return generate_mode()
 
     elif mode == 2:
-        if not ALLOW_SQRT:
+        if not Allows["ALLOW_SQRT"]:
             return generate_mode()
 
     elif mode == 3:
-        if not ALLOW_EXPRESSION:
+        if not Allows["ALLOW_EXPRESSION"]:
             return generate_mode()
 
     elif mode == 4:
-        if not ALLOW_VIEW:
+        if not Allows["ALLOW_VIEW"]:
             return generate_mode()
 
     elif mode == 5:
-        if not ALLOW_QUADRATIC_EQUATION:
+        if not Allows["ALLOW_QUADRATIC_EQUATION"]:
+            return generate_mode()
+
+    elif mode == 6:
+        if not Allows["ALLOW_MEASURE"]:
             return generate_mode()
 
     return mode
@@ -242,5 +279,5 @@ def generate(level):
     if mode == -1:
         return "[math core]: incorrect format"
 
-    return [generate_simple, generate_equation, generate_sqrt, generate_expression, generate_view, generate_quadratic_equation][mode](level)
+    return [generate_simple, generate_equation, generate_sqrt, generate_expression, generate_view, generate_quadratic_equation, generate_measures][mode](level)
     # return generate_simple(level)
